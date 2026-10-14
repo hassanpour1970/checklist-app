@@ -22,18 +22,15 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5'
           channel: 'stable'
+          flutter-version: '3.27.4'   # نسخه جدیدتر و پایدارتر
           cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Generate code (Isar)
+      - name: Generate Isar code
         run: dart run build_runner build --delete-conflicting-outputs
-
-      - name: Analyze (optional)
-        run: flutter analyze || true
 
       - name: Build APK
         run: flutter build apk --release
