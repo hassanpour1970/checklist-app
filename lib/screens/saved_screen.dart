@@ -85,10 +85,20 @@ class SavedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('filled'.tr()),
-        centerTitle: true,
-      ),
+    appBar: AppBar(
+      title: Text('filled'.tr()),
+      centerTitle: true,
+      actions: [
+        IconButton(
+          tooltip: 'language'.tr(),
+          icon: const Icon(Icons.language),
+          onPressed: () {
+            final isFa = context.locale.languageCode == 'fa';
+            context.setLocale(isFa ? const Locale('en') : const Locale('fa'));
+          },
+        ),
+      ],
+    ),
       body: StreamBuilder<List<FilledChecklist>>(
         stream: DB.isar.filledChecklists.where().watch(fireImmediately: true),
         builder: (context, snapshot) {

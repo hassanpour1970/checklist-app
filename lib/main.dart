@@ -74,14 +74,6 @@ class _MainShellState extends State<MainShell> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          final isFa = context.locale.languageCode == 'fa';
-          context.setLocale(isFa ? const Locale('en') : const Locale('fa'));
-        },
-        icon: const Icon(Icons.language),
-        label: Text('language'.tr()),
-      ),
     );
   }
 }

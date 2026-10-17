@@ -40,6 +40,16 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('groups'.tr()),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'language'.tr(),
+            icon: const Icon(Icons.language),
+            onPressed: () {
+              final isFa = context.locale.languageCode == 'fa';
+              context.setLocale(isFa ? const Locale('en') : const Locale('fa'));
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<List<ChecklistGroup>>(
         stream: DB.isar.checklistGroups.where().watch(fireImmediately: true),
