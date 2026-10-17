@@ -1,3 +1,4 @@
+import 'package:isar/isar.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../services/db.dart';
@@ -53,11 +54,10 @@ class _EditTemplateScreenState extends State<EditTemplateScreen> {
 
       // اضافه کردن آیتم‌های جدید
       for (final item in _items) {
-        item.id = 0; // force new id
+        item.id = Isar.autoIncrement;
         await DB.isar.checklistItems.put(item);
         widget.template.items.add(item);
       }
-
       // ذخیره لینک‌ها
       await widget.template.items.save();
     });
