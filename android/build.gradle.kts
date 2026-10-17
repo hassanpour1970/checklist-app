@@ -22,14 +22,3 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
-subprojects {
-    afterEvaluate {
-        if (name == "isar_flutter_libs") {
-            extensions.findByType<com.android.build.gradle.LibraryExtension>()?.apply {
-                if (namespace.isNullOrEmpty()) {
-                    namespace = "dev.isar.isar_flutter_libs"
-                }
-            }
-        }
-    }
-}
