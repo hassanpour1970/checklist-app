@@ -39,19 +39,26 @@ class _EditTemplateScreenState extends State<EditTemplateScreen> {
     await DB.isar.writeTxn(() async {
       await DB.isar.checklistTemplates.put(widget.template);
 
-      // Clear old links
+      // بارگذاری لینک‌های قبلی
       await widget.template.items.load();
+
+      // حذف آیتم‌های قدیمی از دیتابیس
       final oldItems = widget.template.items.toList();
       for (final old in oldItems) {
         await DB.isar.checklistItems.delete(old.id);
       }
-      await widget.template.items.clear();
 
+      // پاک کردن لینک‌ها (بدون await چون void است)
+      widget.template.items.clear();
+
+      // اضافه کردن آیتم‌های جدید
       for (final item in _items) {
-        item.id = 0; // new id
+        item.id = 0; // force new id
         await DB.isar.checklistItems.put(item);
         widget.template.items.add(item);
       }
+
+      // ذخیره لینک‌ها
       await widget.template.items.save();
     });
 
@@ -80,11 +87,12 @@ class _EditTemplateScreenState extends State<EditTemplateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.template.id == 0
-            ? 'add'.tr()
-            : 'edit'.tr()),
+        title: Text(widget.template.id == 0 ? 'add'.tr() : 'edit'.tr()),
         actions: [
-          IconButton(icon: const Icon(Icons.save), onPressed: _save),
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _save,
+          ),
         ],
       ),
       body: Column(
@@ -224,7 +232,10 @@ class _ItemEditorState extends State<_ItemEditor> {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text('cancel'.tr())),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('cancel'.tr()),
+        ),
         FilledButton(
           onPressed: () {
             widget.item.title = _titleCtrl.text.trim();
