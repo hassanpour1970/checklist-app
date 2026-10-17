@@ -12,19 +12,33 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   easy_localization: ^3.0.7
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
   path_provider: ^2.1.4
   excel: ^4.0.6
   share_plus: ^10.0.2
   intl: any
   collection: any
 
+  # === Isar Community (نسخه اصلاح‌شده) ===
+  isar:
+    hosted:
+      name: isar
+      url: https://pub.isar-community.dev/
+    version: ^3.1.0+1
+  isar_flutter_libs:
+    hosted:
+      name: isar_flutter_libs
+      url: https://pub.isar-community.dev/
+    version: ^3.1.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  isar_generator: ^3.1.0+1
+  isar_generator:
+    hosted:
+      name: isar_generator
+      url: https://pub.isar-community.dev/
+    version: ^3.1.0+1
   build_runner: ^2.4.12
 
 flutter:

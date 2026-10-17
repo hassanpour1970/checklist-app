@@ -28,21 +28,27 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Fix isar_flutter_libs namespace
+      - name: Patch isar_flutter_libs (namespace + compileSdk)
         run: |
-          echo "Searching for isar_flutter_libs build.gradle..."
           find $HOME/.pub-cache -type f \( -path "*/isar_flutter_libs-*/android/build.gradle" -o -path "*/isar_flutter_libs-*/android/build.gradle.kts" \) | while read f; do
-            echo "Found: $f"
+            echo "Patching $f"
+            
+            # اضافه کردن namespace اگر وجود ندارد
             if ! grep -q "namespace" "$f"; then
               if [[ "$f" == *.kts ]]; then
                 sed -i '/android {/a\    namespace = "dev.isar.isar_flutter_libs"' "$f"
               else
                 sed -i '/android {/a\    namespace "dev.isar.isar_flutter_libs"' "$f"
               fi
-              echo "→ Patched successfully"
-            else
-              echo "→ Already has namespace"
             fi
+
+            # بالا بردن compileSdk به 34
+            sed -i 's/compileSdkVersion 30/compileSdk 34/g' "$f"
+            sed -i 's/compileSdkVersion = 30/compileSdk = 34/g' "$f"
+            sed -i 's/compileSdk 30/compileSdk 34/g' "$f"
+            sed -i 's/compileSdk = 30/compileSdk = 34/g' "$f"
+            
+            echo "→ Done"
           done
 
       - name: Generate Isar code
