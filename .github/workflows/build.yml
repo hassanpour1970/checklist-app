@@ -28,27 +28,37 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Patch isar_flutter_libs (namespace + compileSdk)
+      - name: Strong patch for isar_flutter_libs
         run: |
+          echo "=== Patching isar_flutter_libs ==="
           find $HOME/.pub-cache -type f \( -path "*/isar_flutter_libs-*/android/build.gradle" -o -path "*/isar_flutter_libs-*/android/build.gradle.kts" \) | while read f; do
-            echo "Patching $f"
+            echo "Processing: $f"
             
-            # اضافه کردن namespace اگر وجود ندارد
+            # ۱. اضافه کردن namespace
             if ! grep -q "namespace" "$f"; then
               if [[ "$f" == *.kts ]]; then
                 sed -i '/android {/a\    namespace = "dev.isar.isar_flutter_libs"' "$f"
               else
                 sed -i '/android {/a\    namespace "dev.isar.isar_flutter_libs"' "$f"
               fi
+              echo "  + namespace added"
             fi
 
-            # بالا بردن compileSdk به 34
-            sed -i 's/compileSdkVersion 30/compileSdk 34/g' "$f"
-            sed -i 's/compileSdkVersion = 30/compileSdk = 34/g' "$f"
-            sed -i 's/compileSdk 30/compileSdk 34/g' "$f"
-            sed -i 's/compileSdk = 30/compileSdk = 34/g' "$f"
+            # ۲. اجبار کردن compileSdk به 34
+            sed -i -E 's/compileSdk(Version)?[[:space:]]*=?[[:space:]]*30/compileSdk = 34/g' "$f"
+            sed -i -E 's/compileSdk(Version)?[[:space:]]+30/compileSdk 34/g' "$f"
             
-            echo "→ Done"
+            # اگر اصلاً compileSdk نداشت، اضافه کن
+            if ! grep -q "compileSdk" "$f"; then
+              if [[ "$f" == *.kts ]]; then
+                sed -i '/android {/a\    compileSdk = 34' "$f"
+              else
+                sed -i '/android {/a\    compileSdk 34' "$f"
+              fi
+              echo "  + compileSdk 34 added"
+            fi
+
+            echo "  → Finished patching"
           done
 
       - name: Generate Isar code
